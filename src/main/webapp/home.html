@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <title>Enit testing</title>
+    <!--Bootstrap 4-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
+          integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"
+            integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron jumbotron-fluid mt-3">
+        <div class="container">
+            <h1 class="display-3">Arithmetic coding</h1>
+            <p class="lead mx-5">Arithmetic coding is a form of entropy encoding used in lossless data
+            compression. Normally, a string of characters such as the words "hello there" is
+            represented using a fixed number of bits per character, as in the ASCII code.
+            When a string is converted to arithmetic encoding, frequently used characters
+            will be stored with fewer bits and not-so-frequently occurring characters will
+            be stored with more bits, resulting in fewer bits used in total. Arithmetic
+            coding differs from other forms of entropy encoding, such as Huffman coding,
+            in that rather than separating the input into component symbols and replacing
+            each with a code, arithmetic coding encodes the entire message into a single number,
+            an arbitrary-precision fraction q where 0.0 ≤ q < 1.0. It represents the current
+            information as a range, defined by two numbers. Recent Asymmetric Numeral Systems
+            family of entropy coders allows for faster implementations thanks to directly
+            operating on a single natural number representing the current information.</p>
+        </div>
+    </div>
+    <div class="content mt-3">
+        <div id="compressDiv" class="m-3">
+            <h3>Upload file to compress</h3>
+            <form th:action="@{/compressFile}" th:method="post" style="max-width: 40%;" enctype="multipart/form-data">
+                <input type="file" class="form-control-file" id="fileToCompress" name="fileToCompress"/>
+                <input type="submit" value="Compress"/>
+            </form>
+        </div>
+        <div id="decompressDiv" class="m-3">
+            <h3>Upload file to decompress</h3>
+            <form th:action="@{/decompressFile}" th:method="post" style="max-width: 40%;" enctype="multipart/form-data">
+                <input type="file" class="form-control-file" id="fileToDecompress" name="fileToDecompress"/>
+                <input type="submit" value="Decompress"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--
+<script th:src="@{https://code.jquery.com/jquery-3.2.1.slim.min.js}"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js}"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+-->
+</body>
+</html>

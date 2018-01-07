@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>fileUploadView</title>
+</head>
+
+<body>
+    <div class="container">
+        <p>File name is: <span th:text="${fileName}"></span></p>
+        <p>File type is: <span th:text="${fileType}"></span></p>
+        <p>Original file name is: <span th:text="${originalFileName}"></span></p>
+        <p>File bytes: <span th:text="${bytes}"></span></p>
+    </div>
+
+</body>
+</html>
