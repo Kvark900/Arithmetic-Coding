@@ -1,8 +1,8 @@
 package com.kvark900.test.service;
 
-import com.kvark900.test.service.entropyCoding.IOStreamsCloser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,19 +10,21 @@ import java.io.InputStream;
 /**
  * Created by Keno&Kemo on 07.01.2018..
  */
+@Service
 public class FileUploader {
     private IOStreamsCloser ioStreamsCloser;
 
+    public FileUploader() {
+    }
+
+    @Autowired
     public FileUploader(IOStreamsCloser ioStreamsCloser) {
         this.ioStreamsCloser = ioStreamsCloser;
     }
 
-    public void uploadFile(InputStream inputStream, String originalFileName){
+    public void uploadFile(InputStream inputStream, String fileLocation){
         InputStream is =null;
         FileOutputStream fileOutputStream = null;
-        File currDir = new File(".");
-        String path = currDir.getAbsolutePath();
-        String fileLocation = path.substring(0, path.length() - 1) + originalFileName;
 
         int ch;
         //uploading file

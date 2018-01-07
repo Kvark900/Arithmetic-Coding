@@ -1,9 +1,10 @@
 package com.kvark900.test.controller;
 
+import com.kvark900.test.service.FileDownloader;
+import com.kvark900.test.service.FileUploader;
 import com.kvark900.test.service.entropyCoding.ArithmeticCoding;
-import com.kvark900.test.service.entropyCoding.IOStreamsCloser;
+import com.kvark900.test.service.IOStreamsCloser;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,7 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
@@ -25,11 +27,15 @@ public class MainController {
 
     private IOStreamsCloser ioStreamsCloser;
     private ArithmeticCoding arithmeticCoding;
+    private FileUploader fileUploader;
+    private FileDownloader fileDownloader;
 
     @Autowired
-    public MainController(IOStreamsCloser ioStreamsCloser, ArithmeticCoding arithmeticCoding) {
+    public MainController(IOStreamsCloser ioStreamsCloser, ArithmeticCoding arithmeticCoding, FileUploader fileUploader, FileDownloader fileDownloader) {
         this.ioStreamsCloser = ioStreamsCloser;
         this.arithmeticCoding = arithmeticCoding;
+        this.fileUploader = fileUploader;
+        this.fileDownloader = fileDownloader;
     }
 
     @RequestMapping("/")
@@ -39,50 +45,22 @@ public class MainController {
 
     @RequestMapping(value = "/compressFile", method = RequestMethod.POST)
     public void compressFile(@RequestParam("fileToCompress") MultipartFile file, ModelMap modelMap,
-                             MultipartHttpServletRequest request, HttpServletResponse response) {
+                             MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        InputStream inputStream =null;
-        FileOutputStream fileOutputStream = null;
         File currDir = new File(".");
         String path = currDir.getAbsolutePath();
         String fileLocation = path.substring(0, path.length() - 1) + file.getOriginalFilename();
         String compressedFilePath = FilenameUtils.getBaseName(fileLocation)+".arit";
-        File compressedFile = null;
-        int ch;
 
         //uploading file
-        try {
-            inputStream = file.getInputStream();
-            fileOutputStream = new FileOutputStream(fileLocation);
-            while ((ch = inputStream.read()) != -1) {
-                fileOutputStream.write(ch);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            ioStreamsCloser.closeStream(inputStream);
-            ioStreamsCloser.closeStream(fileOutputStream);
-            System.gc();
-        }
+        fileUploader.uploadFile(file.getInputStream(), fileLocation);
 
         //compressing file
-        try {
-            compressedFile = new File(compressedFilePath);
-            BigDecimal encodedMessage = arithmeticCoding.encodeFile(new File(fileLocation));
-            arithmeticCoding.createCompressedFile(compressedFile, encodedMessage);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        File compressedFile = new File(compressedFilePath);
+        BigDecimal encodedMessage = arithmeticCoding.encodeFile(new File(fileLocation));
+        arithmeticCoding.createCompressedFile(compressedFile, encodedMessage);
 
         //downloading compressed file
-        try {
-            // get your file as InputStream
-            InputStream is = new BufferedInputStream(new FileInputStream(compressedFile));            // copy it to response's OutputStream
-            IOUtils.copy(is, response.getOutputStream());
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + compressedFile.getName() +"\"");
-            response.flushBuffer();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        fileDownloader.downloadFile(compressedFile, response);
     }
 }
