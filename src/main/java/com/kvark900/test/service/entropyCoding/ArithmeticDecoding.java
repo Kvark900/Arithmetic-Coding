@@ -1,6 +1,7 @@
 package com.kvark900.test.service.entropyCoding;
 
 import com.kvark900.test.service.IOStreamsCloser;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -42,7 +43,7 @@ public class ArithmeticDecoding extends SimpleProbabilities {
 
     public void decodeFile (File fileToDecode) throws FileNotFoundException, UnsupportedEncodingException {
         BigDecimal messageToDecode = getEncodedMessage(fileToDecode);
-        String fileName = fileToDecode.getName();
+        String fileName = FilenameUtils.getBaseName(fileToDecode.getName());
         BigDecimal stopCharacterInterval[] = getStopCharacterInterval();
         PrintWriter writer = new PrintWriter(fileName + ".txt", "UTF-8");
 

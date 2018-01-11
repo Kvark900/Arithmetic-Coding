@@ -33,18 +33,16 @@ public class MainController {
     private ArithmeticCodingSimple arithmeticCodingSimple;
     private FileUploader fileUploader;
     private FileDownloader fileDownloader;
-    private StopCharacterAppender stopCharacterAppender;
 
     @Autowired
     public MainController(IOStreamsCloser ioStreamsCloser, ArithmeticCoding arithmeticCoding, ArithmeticDecoding
-            arithmeticDecoding, ArithmeticCodingSimple arithmeticCodingSimple, FileUploader fileUploader, FileDownloader fileDownloader, StopCharacterAppender stopCharacterAppender) {
+            arithmeticDecoding, ArithmeticCodingSimple arithmeticCodingSimple, FileUploader fileUploader, FileDownloader fileDownloader) {
         this.ioStreamsCloser = ioStreamsCloser;
         this.arithmeticCoding = arithmeticCoding;
         this.arithmeticDecoding = arithmeticDecoding;
         this.arithmeticCodingSimple = arithmeticCodingSimple;
         this.fileUploader = fileUploader;
         this.fileDownloader = fileDownloader;
-        this.stopCharacterAppender = stopCharacterAppender;
     }
 
     @RequestMapping("/")
