@@ -49,7 +49,7 @@ public class ArithmeticDecoding extends SimpleProbabilities {
         while (!(messageToDecode.compareTo(stopCharacterInterval[0])>0 &&
                 messageToDecode.compareTo(stopCharacterInterval[1])<0)){
             for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
-                if(messageToDecode.compareTo(entry.getValue().get(0))>0 &&
+                if(messageToDecode.compareTo(entry.getValue().get(0))>=0 &&
                         messageToDecode.compareTo(entry.getValue().get(1))<0){
                     writer.print(entry.getKey());
                     BigDecimal subtractMessage = messageToDecode.subtract(entry.getValue().get(0));
@@ -58,21 +58,6 @@ public class ArithmeticDecoding extends SimpleProbabilities {
                 }
             }
         }
-        /*for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
-            if (messageToDecode.compareTo(stopCharacterInterval[0])>0 &&
-                    messageToDecode.compareTo(stopCharacterInterval[1])<0) {
-                break;
-
-            }
-
-            if(messageToDecode.compareTo(entry.getValue().get(0))>0 &&
-                    messageToDecode.compareTo(entry.getValue().get(1))<0){
-                writer.print(entry.getKey());
-                BigDecimal subtractMessage = messageToDecode.subtract(entry.getValue().get(0));
-                BigDecimal subtractIntervals = entry.getValue().get(1).subtract(entry.getValue().get(0));
-                messageToDecode = subtractMessage.divide(subtractIntervals, 20, BigDecimal.ROUND_HALF_UP);
-            }
-        }*/
         writer.close();
     }
 }

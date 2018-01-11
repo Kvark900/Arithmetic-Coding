@@ -1,5 +1,7 @@
 package com.kvark900.test.service.entropyCoding;
 
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 /**
  * Created by Keno&Kemo on 11.01.2018..
  */
+@Service
 public class SimpleProbabilities {
     //Getting Basic Latin characters
     public List<Character> getBasicLatinCharacters(){

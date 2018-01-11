@@ -4,6 +4,8 @@ import com.kvark900.test.service.FileDownloader;
 import com.kvark900.test.service.FileUploader;
 import com.kvark900.test.service.entropyCoding.ArithmeticCoding;
 import com.kvark900.test.service.IOStreamsCloser;
+import com.kvark900.test.service.entropyCoding.ArithmeticCodingSimple;
+import com.kvark900.test.service.entropyCoding.ArithmeticDecoding;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,15 +29,22 @@ public class MainController {
 
     private IOStreamsCloser ioStreamsCloser;
     private ArithmeticCoding arithmeticCoding;
+    private ArithmeticDecoding arithmeticDecoding;
+    private ArithmeticCodingSimple arithmeticCodingSimple;
     private FileUploader fileUploader;
     private FileDownloader fileDownloader;
+    private StopCharacterAppender stopCharacterAppender;
 
     @Autowired
-    public MainController(IOStreamsCloser ioStreamsCloser, ArithmeticCoding arithmeticCoding, FileUploader fileUploader, FileDownloader fileDownloader) {
+    public MainController(IOStreamsCloser ioStreamsCloser, ArithmeticCoding arithmeticCoding, ArithmeticDecoding
+            arithmeticDecoding, ArithmeticCodingSimple arithmeticCodingSimple, FileUploader fileUploader, FileDownloader fileDownloader, StopCharacterAppender stopCharacterAppender) {
         this.ioStreamsCloser = ioStreamsCloser;
         this.arithmeticCoding = arithmeticCoding;
+        this.arithmeticDecoding = arithmeticDecoding;
+        this.arithmeticCodingSimple = arithmeticCodingSimple;
         this.fileUploader = fileUploader;
         this.fileDownloader = fileDownloader;
+        this.stopCharacterAppender = stopCharacterAppender;
     }
 
     @RequestMapping("/")
@@ -55,12 +64,33 @@ public class MainController {
         //uploading file
         fileUploader.uploadFile(file.getInputStream(), fileLocation);
 
+
         //compressing file
         File compressedFile = new File(compressedFilePath);
-        BigDecimal encodedMessage = arithmeticCoding.encodeFile(new File(fileLocation));
-        arithmeticCoding.createCompressedFile(compressedFile, encodedMessage);
+        BigDecimal encodedMessage = arithmeticCodingSimple.encodeWithSimpleProbabilities(new File(fileLocation));
+        arithmeticCodingSimple.createCompressedFile(compressedFile, encodedMessage);
 
         //downloading compressed file
         fileDownloader.downloadFile(compressedFile, response);
+    }
+
+    @RequestMapping(value = "/decompressFile", method = RequestMethod.POST)
+    public void decompressFile(@RequestParam("fileToDecompress") MultipartFile file, ModelMap modelMap,
+                             MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        File currDir = new File(".");
+        String path = currDir.getAbsolutePath();
+        String fileLocation = path.substring(0, path.length() - 1) + file.getOriginalFilename();
+        String decompressedFilePath = FilenameUtils.getBaseName(fileLocation)+".txt";
+
+        //uploading file
+        fileUploader.uploadFile(file.getInputStream(), fileLocation);
+
+        //decompressing file
+        File decompressedFile = new File(decompressedFilePath);
+        arithmeticDecoding.decodeFile(new File(fileLocation));
+
+        //downloading decompressed file
+        fileDownloader.downloadFile(decompressedFile, response);
     }
 }

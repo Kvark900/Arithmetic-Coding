@@ -1,6 +1,7 @@
 package com.kvark900.test.service.entropyCoding;
 
 import com.kvark900.test.service.IOStreamsCloser;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import java.util.Scanner;
 /**
  * Created by Keno&Kemo on 11.01.2018..
  */
+@Service
 public class ArithmeticCodingSimple extends SimpleProbabilities {
     private IOStreamsCloser ioStreamsCloser = new IOStreamsCloser();
 

@@ -34,6 +34,8 @@ public class FileUploader {
             while ((ch = is.read()) != -1) {
                 fileOutputStream.write(ch);
             }
+            //adding stop character
+            fileOutputStream.write('~');
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
