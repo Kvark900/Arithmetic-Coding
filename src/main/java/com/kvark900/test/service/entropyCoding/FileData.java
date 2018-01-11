@@ -28,6 +28,7 @@ public class FileData {
         return numberOfAllCharacters;
     }
 
+
     public  List<Character> getListOfCharacters(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
         List<Character> chars = new ArrayList<Character>();
@@ -41,6 +42,16 @@ public class FileData {
             }
         }
         return chars;
+    }
+
+    public int countNumberOfCharacters (File file) throws FileNotFoundException {
+        return getListOfCharacters(file).size();
+    }
+
+    public  BigDecimal getCharSimpleProbability(File file) throws FileNotFoundException {
+        return BigDecimal.valueOf(1).divide(BigDecimal.
+                valueOf(countNumberOfCharacters(file)).
+                setScale(20, BigDecimal.ROUND_HALF_UP));
     }
 
     public  int countCharOccurrences(File file, char symbol) throws FileNotFoundException {
@@ -71,6 +82,8 @@ public class FileData {
         }
         return characterOccurrences;
     }
+
+
 
     public  Map<Character, BigDecimal> getCharProbabilityMap(File file) throws FileNotFoundException {
         List<Character> charactersList = getListOfCharacters(file);
@@ -124,6 +137,44 @@ public class FileData {
 
         //Populating with characters and intervals charIntervalsMap
         for (int i = 0; i < probabilities.size(); i++) {
+            charIntervalsMap.put(characters.get(i), intervals.get(i));
+        }
+
+        return charIntervalsMap;
+    }
+
+    public Map<Character, List<BigDecimal>> getCharsSimpleIntervalsMap(File file) throws FileNotFoundException {
+        List<Character> characters = new ArrayList<Character>();
+        List<List<BigDecimal>> intervals = new ArrayList<List<BigDecimal>>();
+        BigDecimal characterSimpleProbability = getCharSimpleProbability(file);
+
+        Map<Character, List<BigDecimal>> charIntervalsMap = new HashMap<Character, List<BigDecimal>>();
+        BigDecimal intervalEndPoint = new BigDecimal(0);
+
+        //Adding characters and probabilities
+        for (Map.Entry<Character, BigDecimal> entry : getCharProbabilityMap(file).entrySet()) {
+            characters.add(entry.getKey());
+        }
+
+        //Adding intervals
+        for (int i = 0; i < characters.size(); i++) {
+            if (i == 0) {
+                List<BigDecimal> interval = new ArrayList<BigDecimal>();
+                interval.add(intervalEndPoint);
+                intervalEndPoint = intervalEndPoint.add(characterSimpleProbability);
+                interval.add(intervalEndPoint);
+                intervals.add(interval);
+            } else {
+                List<BigDecimal> interval = new ArrayList<BigDecimal>();
+                interval.add(intervalEndPoint);
+                intervalEndPoint = intervalEndPoint.add(characterSimpleProbability);
+                interval.add(intervalEndPoint);
+                intervals.add(interval);
+            }
+        }
+
+        //Populating with characters and intervals charIntervalsMap
+        for (int i = 0; i < characters.size(); i++) {
             charIntervalsMap.put(characters.get(i), intervals.get(i));
         }
 
