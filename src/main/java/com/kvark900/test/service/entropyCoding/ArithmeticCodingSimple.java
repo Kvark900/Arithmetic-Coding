@@ -22,8 +22,9 @@ public class ArithmeticCodingSimple extends SimpleProbabilities {
         BigDecimal subIntervalStart = new BigDecimal(0);
         BigDecimal width = new BigDecimal(0);
         int countLines = 0;
-        BigDecimal simpleProbability = BigDecimal.valueOf(1).divide(BigDecimal.valueOf(getBasicLatinCharacters().size()),
-                20, BigDecimal.ROUND_HALF_UP);
+        BigDecimal simpleProbability = BigDecimal.ONE.
+                divide(new BigDecimal(getBasicLatinCharacters().size()),
+                1000, BigDecimal.ROUND_HALF_UP);
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
@@ -33,7 +34,8 @@ public class ArithmeticCodingSimple extends SimpleProbabilities {
                 //For the first character in the file do:
                 if(countLines==1 && i==0){
                     //Start of the sub-interval
-                    for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
+                    for (Map.Entry<Character, List<BigDecimal>> entry :
+                            getCharsSimpleIntervalsMap().entrySet()) {
                         if(entry.getKey().equals(character)){
                             subIntervalStart = subIntervalStart.add(entry.getValue().get(0));
 //                            System.out.println("subIntervalStart: "+subIntervalStart);
@@ -43,14 +45,15 @@ public class ArithmeticCodingSimple extends SimpleProbabilities {
                     //Width of the sub-interval
                     width = width.add(simpleProbability);
 //                   System.out.println("width: "+width);
-
                 }
                 //Else:
                 else {
                     //Start of the sub-interval
-                    for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
+                    for (Map.Entry<Character, List<BigDecimal>> entry :
+                            getCharsSimpleIntervalsMap().entrySet()) {
                         if(entry.getKey().equals(character)){
-                            subIntervalStart = subIntervalStart.add (entry.getValue().get(0).multiply(width));
+                            subIntervalStart = subIntervalStart.add (entry.getValue().get(0).
+                                    multiply(width));
 //                            System.out.println("subIntervalStart: "+subIntervalStart);
                         }
                     }
@@ -58,12 +61,11 @@ public class ArithmeticCodingSimple extends SimpleProbabilities {
                     //Width of the sub-interval
                     width = width.multiply(simpleProbability);
 //                  System.out.println("width: "+width);
-
                 }
 
             }
         }
-        return subIntervalStart.setScale(1000, BigDecimal.ROUND_HALF_UP);
+        return subIntervalStart = subIntervalStart.setScale(1000, BigDecimal.ROUND_HALF_UP);
     }
 
     //Write encoded message to the new compressed file

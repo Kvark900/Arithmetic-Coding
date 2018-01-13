@@ -47,15 +47,18 @@ public class ArithmeticDecoding extends SimpleProbabilities {
         BigDecimal stopCharacterInterval[] = getStopCharacterInterval();
         PrintWriter writer = new PrintWriter(fileName + ".txt", "UTF-8");
 
-        while (!(messageToDecode.compareTo(stopCharacterInterval[0])>0 &&
-                messageToDecode.compareTo(stopCharacterInterval[1])<0)){
+        while (messageToDecode.compareTo(stopCharacterInterval[0])<0){
             for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
-                if(messageToDecode.compareTo(entry.getValue().get(0))>=0 &&
-                        messageToDecode.compareTo(entry.getValue().get(1))<0){
+                if (messageToDecode.compareTo(stopCharacterInterval[0])>0 &&
+                        messageToDecode.compareTo(stopCharacterInterval[1])<0) {
+                    break;
+                }
+                else if(messageToDecode.compareTo(entry.getValue().get(0))>=0 &&
+                        messageToDecode.compareTo(entry.getValue().get(1))<=0){
                     writer.print(entry.getKey());
                     BigDecimal subtractMessage = messageToDecode.subtract(entry.getValue().get(0));
                     BigDecimal subtractIntervals = entry.getValue().get(1).subtract(entry.getValue().get(0));
-                    messageToDecode = subtractMessage.divide(subtractIntervals, 20, BigDecimal.ROUND_HALF_UP);
+                    messageToDecode = subtractMessage.divide(subtractIntervals, 1000, BigDecimal.ROUND_HALF_UP);
                 }
             }
         }

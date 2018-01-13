@@ -26,8 +26,8 @@ public class SimpleProbabilities {
     //Simple characters map
     public Map<Character, List<BigDecimal>> getCharsSimpleIntervalsMap(){
         List<List<BigDecimal>> intervals = new ArrayList<List<BigDecimal>>();
-        BigDecimal characterSimpleProbability = BigDecimal.valueOf(1).
-                divide(BigDecimal.valueOf(getBasicLatinCharacters().size()), 1000,
+        BigDecimal characterSimpleProbability = BigDecimal.ONE.
+                divide(new BigDecimal(getBasicLatinCharacters().size()), 1000,
                         BigDecimal.ROUND_HALF_UP);
 
         Map<Character, List<BigDecimal>> charIntervalsMap = new HashMap<Character, List<BigDecimal>>();
