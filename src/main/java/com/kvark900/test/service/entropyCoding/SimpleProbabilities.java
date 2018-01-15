@@ -70,4 +70,16 @@ public class SimpleProbabilities {
         }
         return stopCharacterInterval;
     }
+
+    public BigDecimal[] getNewLineCharacterInterval () {
+        BigDecimal[] newLineCharacterInterval = new BigDecimal[2];
+
+        for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
+            if (entry.getKey().equals('|')) {
+                newLineCharacterInterval[0] = entry.getValue().get(0);
+                newLineCharacterInterval[1] = entry.getValue().get(1);
+            }
+        }
+        return newLineCharacterInterval;
+    }
 }

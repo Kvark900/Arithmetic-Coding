@@ -25,9 +25,7 @@ public class FileDownloader {
     public void downloadFile(File compressedFile, HttpServletResponse response ){
         InputStream is = null;
         try {
-            // get your file as InputStream
             is = new BufferedInputStream(new FileInputStream(compressedFile));
-            // copy it to response's OutputStream
             IOUtils.copy(is, response.getOutputStream());
             response.setHeader("Content-Disposition", "attachment; filename=\""
                     + compressedFile.getName() +"\"");

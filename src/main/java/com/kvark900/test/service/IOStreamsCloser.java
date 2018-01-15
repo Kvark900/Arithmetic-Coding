@@ -14,7 +14,9 @@ public class IOStreamsCloser {
 
     public void closeStream (Closeable closeable){
         try {
-            closeable.close();
+            if(closeable != null){
+                closeable.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

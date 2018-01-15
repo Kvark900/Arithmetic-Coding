@@ -45,6 +45,7 @@ public class ArithmeticDecoding extends SimpleProbabilities {
         BigDecimal messageToDecode = getEncodedMessage(fileToDecode);
         String fileName = FilenameUtils.getBaseName(fileToDecode.getName());
         BigDecimal stopCharacterInterval[] = getStopCharacterInterval();
+        BigDecimal newLineCharacter[] = getNewLineCharacterInterval();
         PrintWriter writer = new PrintWriter(fileName + ".txt", "UTF-8");
 
         while (messageToDecode.compareTo(stopCharacterInterval[0])<0){
@@ -52,6 +53,13 @@ public class ArithmeticDecoding extends SimpleProbabilities {
                 if (messageToDecode.compareTo(stopCharacterInterval[0])>0 &&
                         messageToDecode.compareTo(stopCharacterInterval[1])<0) {
                     break;
+                }
+                else if (messageToDecode.compareTo(newLineCharacter[0])>0 &&
+                        messageToDecode.compareTo(newLineCharacter[1])<0) {
+                    writer.println("");
+                    BigDecimal subtractMessage = messageToDecode.subtract(newLineCharacter[0]);
+                    BigDecimal subtractIntervals = newLineCharacter[1].subtract(newLineCharacter[0]);
+                    messageToDecode = subtractMessage.divide(subtractIntervals, 1000, BigDecimal.ROUND_HALF_UP);
                 }
                 else if(messageToDecode.compareTo(entry.getValue().get(0))>=0 &&
                         messageToDecode.compareTo(entry.getValue().get(1))<=0){

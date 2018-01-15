@@ -3,9 +3,7 @@ package com.kvark900.test.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * Created by Keno&Kemo on 07.01.2018..
@@ -26,21 +24,25 @@ public class FileUploader {
         InputStream is =null;
         FileOutputStream fileOutputStream = null;
 
-        int ch;
         //uploading file
         try {
             is = inputStream;
-            fileOutputStream = new FileOutputStream(fileLocation);
-            while ((ch = is.read()) != -1) {
-                fileOutputStream.write(ch);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            PrintWriter writer = new PrintWriter(fileLocation, "UTF-8");
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                //writing lines and newLineCharacters on the new File
+                writer.println(line + '|');
             }
             //adding stop character
-            fileOutputStream.write('~');
+            writer.print('~');
+            writer.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
             ioStreamsCloser.closeStream(is);
-            ioStreamsCloser.closeStream(fileOutputStream);
             System.gc();
         }
     }
