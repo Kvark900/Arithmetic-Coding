@@ -2,8 +2,8 @@ package com.kvark900.test.controller;
 
 import com.kvark900.test.service.FileDownloader;
 import com.kvark900.test.service.FileUploader;
-import com.kvark900.test.service.entropyCoding.ArithmeticCodingSimple;
-import com.kvark900.test.service.entropyCoding.ArithmeticDecoding;
+import com.kvark900.test.service.entropyCoding.arithmeticCoding.ArithmeticCodingSimple;
+import com.kvark900.test.service.entropyCoding.arithmeticCoding.ArithmeticDecoding;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,7 +66,7 @@ public class MainController {
 
             //uploading file
 
-            fileUploader.uploadFile(file.getInputStream(), fileLocation);
+            fileUploader.uploadTextFile(file.getInputStream(), fileLocation);
 
 
             //compressing file
@@ -100,7 +100,7 @@ public class MainController {
             String decompressedFilePath = FilenameUtils.getBaseName(fileLocation)+".txt";
 
             //uploading file
-            fileUploader.uploadFile(file.getInputStream(), fileLocation);
+            fileUploader.uploadFileToDecompress(file.getInputStream(), fileLocation);
 
             //decompressing file
             File decompressedFile = new File(decompressedFilePath);

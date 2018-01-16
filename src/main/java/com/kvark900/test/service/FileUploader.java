@@ -20,9 +20,8 @@ public class FileUploader {
         this.ioStreamsCloser = ioStreamsCloser;
     }
 
-    public void uploadFile(InputStream inputStream, String fileLocation){
+    public void uploadTextFile(InputStream inputStream, String fileLocation){
         InputStream is =null;
-        FileOutputStream fileOutputStream = null;
 
         //uploading file
         try {
@@ -43,6 +42,26 @@ public class FileUploader {
             e.printStackTrace();
         }finally {
             ioStreamsCloser.closeStream(is);
+            System.gc();
+        }
+    }
+    public void uploadFileToDecompress(InputStream inputStream, String fileLocation){
+        InputStream is =null;
+        FileOutputStream fileOutputStream = null;
+
+        int ch;
+        //uploading file
+        try {
+            is = inputStream;
+            fileOutputStream = new FileOutputStream(fileLocation);
+            while ((ch = is.read()) != -1) {
+                fileOutputStream.write(ch);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            ioStreamsCloser.closeStream(is);
+            ioStreamsCloser.closeStream(fileOutputStream);
             System.gc();
         }
     }
