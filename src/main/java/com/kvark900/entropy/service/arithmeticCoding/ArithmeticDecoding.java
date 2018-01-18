@@ -1,8 +1,8 @@
 package com.kvark900.entropy.service.arithmeticCoding;
 
 import com.kvark900.entropy.service.IOStreamsCloser;
-import com.kvark900.entropy.service.arithmeticCoding.other.FileData;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -16,8 +16,15 @@ import java.util.Map;
 @Service
 public class ArithmeticDecoding extends SimpleProbabilities {
 
-    FileData fileData = new FileData();
-    private IOStreamsCloser ioStreamsCloser = new IOStreamsCloser();
+    private IOStreamsCloser ioStreamsCloser;
+
+    public ArithmeticDecoding() {
+    }
+
+    @Autowired
+    public ArithmeticDecoding(IOStreamsCloser ioStreamsCloser) {
+        this.ioStreamsCloser = ioStreamsCloser;
+    }
 
     //Read from compressed file - get message to decode
     public BigDecimal getEncodedMessage(File file){

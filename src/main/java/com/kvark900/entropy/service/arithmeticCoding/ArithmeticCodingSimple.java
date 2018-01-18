@@ -1,6 +1,7 @@
 package com.kvark900.entropy.service.arithmeticCoding;
 
 import com.kvark900.entropy.service.IOStreamsCloser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -14,7 +15,19 @@ import java.util.Scanner;
  */
 @Service
 public class ArithmeticCodingSimple extends SimpleProbabilities {
-    private IOStreamsCloser ioStreamsCloser = new IOStreamsCloser();
+
+    private IOStreamsCloser ioStreamsCloser;
+
+    public ArithmeticCodingSimple() {
+
+    }
+
+    @Autowired
+    public ArithmeticCodingSimple(IOStreamsCloser ioStreamsCloser) {
+        this.ioStreamsCloser = ioStreamsCloser;
+    }
+
+
 
     //Algorithm for encoding the file
     public BigDecimal encodeWithSimpleProbabilities(File file) throws FileNotFoundException {
