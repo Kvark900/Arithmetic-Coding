@@ -1,9 +1,9 @@
-package com.kvark900.test.controller;
+package com.kvark900.entropy.controller;
 
-import com.kvark900.test.service.FileDownloader;
-import com.kvark900.test.service.FileUploader;
-import com.kvark900.test.service.entropyCoding.arithmeticCoding.ArithmeticCodingSimple;
-import com.kvark900.test.service.entropyCoding.arithmeticCoding.ArithmeticDecoding;
+import com.kvark900.entropy.service.FileDownloader;
+import com.kvark900.entropy.service.FileUploader;
+import com.kvark900.entropy.service.arithmeticCoding.ArithmeticCodingSimple;
+import com.kvark900.entropy.service.arithmeticCoding.ArithmeticDecoding;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,7 +54,7 @@ public class MainController {
         }
 
         if(!file.getContentType().equals("text/plain")){
-            model.addAttribute("notTextFile1", true);
+            model.addAttribute("notTextFile", true);
             return "home";
         }
 

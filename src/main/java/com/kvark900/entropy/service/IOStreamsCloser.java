@@ -1,4 +1,4 @@
-package com.kvark900.test.service;
+package com.kvark900.entropy.service;
 
 import org.springframework.stereotype.Service;
 

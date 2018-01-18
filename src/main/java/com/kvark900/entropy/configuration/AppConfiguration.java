@@ -1,4 +1,4 @@
-package com.kvark900.test.configuration;
+package com.kvark900.entropy.configuration;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.context.annotation.Bean;

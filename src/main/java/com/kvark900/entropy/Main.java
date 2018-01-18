@@ -1,4 +1,4 @@
-package com.kvark900.test;
+package com.kvark900.entropy;
 
 /**
  * Created by Keno&Kemo on 28.12.2017..

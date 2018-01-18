@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       lang="en">
 <head>
-    <title>Enit testing</title>
+    <title>Arithmetic coding</title>
     <!--Bootstrap 4-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
           integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"/>
@@ -41,7 +41,7 @@
                 <input type="submit" value="Compress"/>
             </form>
             <span th:if="${noFileSelectedToCompress}" style="color: red">Please select a file to compress</span>
-            <span th:if="${notTextFile1}" style="color: red">Please select a text file to compress</span>
+            <span th:if="${notTextFile}" style="color: red">Please select a text file to compress</span>
         </div>
         <div id="decompressDiv" class="m-3">
             <h3>Upload file to decompress</h3>

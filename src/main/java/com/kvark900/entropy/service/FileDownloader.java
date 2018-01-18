@@ -1,4 +1,4 @@
-package com.kvark900.test.service;
+package com.kvark900.entropy.service;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;

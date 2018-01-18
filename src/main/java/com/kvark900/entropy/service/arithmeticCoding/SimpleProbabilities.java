@@ -1,4 +1,4 @@
-package com.kvark900.test.service.entropyCoding.arithmeticCoding;
+package com.kvark900.entropy.service.arithmeticCoding;
 
 import org.springframework.stereotype.Service;
 

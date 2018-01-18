@@ -1,6 +1,6 @@
-package com.kvark900.test.service.entropyCoding.arithmeticCoding;
+package com.kvark900.entropy.service.arithmeticCoding;
 
-import com.kvark900.test.service.IOStreamsCloser;
+import com.kvark900.entropy.service.IOStreamsCloser;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
