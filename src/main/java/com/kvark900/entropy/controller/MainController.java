@@ -65,21 +65,23 @@ public class MainController {
             String compressedFilePath = FilenameUtils.getBaseName(fileLocation) + ".arit";
 
             //uploading file
-
-            fileUploader.uploadTextFile(file.getInputStream(), fileLocation);
-
+            File uploadedFile = new File(fileLocation);
+            fileUploader.uploadTextFileToCompress(file.getInputStream(), uploadedFile);
 
             //compressing file
             File compressedFile = new File(compressedFilePath);
-            BigDecimal encodedMessage;
-
-            encodedMessage = arithmeticCodingSimple.encodeWithSimpleProbabilities(new File(fileLocation));
-
+            BigDecimal encodedMessage = arithmeticCodingSimple.
+                    encodeWithSimpleProbabilities(uploadedFile);
             arithmeticCodingSimple.createCompressedFile(compressedFile, encodedMessage);
 
             //downloading compressed file
             fileDownloader.downloadFile(compressedFile, response);
-            return "home";
+
+            //deleting files
+            uploadedFile.delete();
+            compressedFile.delete();
+
+            return null;
         }
 
     }
@@ -100,17 +102,22 @@ public class MainController {
             String decompressedFilePath = FilenameUtils.getBaseName(fileLocation)+".txt";
 
             //uploading file
-            fileUploader.uploadFileToDecompress(file.getInputStream(), fileLocation);
+            File uploadedFile = new File(fileLocation);
+            fileUploader.uploadFileToDecompress(file.getInputStream(), uploadedFile);
 
             //decompressing file
             File decompressedFile = new File(decompressedFilePath);
             arithmeticDecoding.decodeFile(new File(fileLocation));
 
+
             //downloading decompressed file
             fileDownloader.downloadFile(decompressedFile, response);
-            return "home";
+
+            //deleting files
+            uploadedFile.delete();
+            decompressedFile.delete();
+
+            return null;
         }
-
-
     }
 }

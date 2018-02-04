@@ -20,32 +20,35 @@ public class FileUploader {
         this.ioStreamsCloser = ioStreamsCloser;
     }
 
-    public void uploadTextFile(InputStream inputStream, String fileLocation){
+    public void uploadTextFileToCompress(InputStream inputStream, File uploadedFile){
         InputStream is =null;
+        PrintWriter writer = null;
+        BufferedReader reader = null;
 
         //uploading file
         try {
             is = inputStream;
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            PrintWriter writer = new PrintWriter(fileLocation, "UTF-8");
+            reader = new BufferedReader(new InputStreamReader(is));
+            writer = new PrintWriter(uploadedFile, "UTF-8");
             String line;
 
             while ((line = reader.readLine()) != null) {
-                //writing lines and newLineCharacters on the new File
+                //writing lines and newLineCharacters to a new File
                 writer.println(line + '|');
             }
             //adding stop character
             writer.print('~');
-            writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
             ioStreamsCloser.closeStream(is);
-            System.gc();
+            ioStreamsCloser.closeStream(reader);
+            ioStreamsCloser.closeStream(writer);
+            ioStreamsCloser.closeStream(inputStream);
         }
     }
-    public void uploadFileToDecompress(InputStream inputStream, String fileLocation){
+    public void uploadFileToDecompress(InputStream inputStream, File uploadedFile){
         InputStream is =null;
         FileOutputStream fileOutputStream = null;
 
@@ -53,7 +56,7 @@ public class FileUploader {
         //uploading file
         try {
             is = inputStream;
-            fileOutputStream = new FileOutputStream(fileLocation);
+            fileOutputStream = new FileOutputStream(uploadedFile);
             while ((ch = is.read()) != -1) {
                 fileOutputStream.write(ch);
             }
@@ -62,7 +65,7 @@ public class FileUploader {
         }finally {
             ioStreamsCloser.closeStream(is);
             ioStreamsCloser.closeStream(fileOutputStream);
-            System.gc();
+            ioStreamsCloser.closeStream(inputStream);
         }
     }
 }

@@ -38,7 +38,5 @@ public class FileDownloader {
         }finally {
             ioStreamsCloser.closeStream(is);
         }
-
-
     }
 }

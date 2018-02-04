@@ -78,6 +78,7 @@ public class ArithmeticCodingSimple extends SimpleProbabilities {
 
             }
         }
+        scanner.close();
         return subIntervalStart = subIntervalStart.setScale(1000, BigDecimal.ROUND_HALF_UP);
     }
 

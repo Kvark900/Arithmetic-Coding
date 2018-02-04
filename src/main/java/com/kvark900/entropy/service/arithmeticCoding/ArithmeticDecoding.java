@@ -78,6 +78,7 @@ public class ArithmeticDecoding extends SimpleProbabilities {
                 }
             }
         }
+        writer.flush();
         writer.close();
     }
 }
