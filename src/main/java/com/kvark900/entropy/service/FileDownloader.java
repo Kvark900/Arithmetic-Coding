@@ -28,7 +28,7 @@ public class FileDownloader {
             is = new BufferedInputStream(new FileInputStream(compressedFile));
             IOUtils.copy(is, response.getOutputStream());
             response.setHeader("Content-Disposition", "attachment; filename=\""
-                    + compressedFile.getName() +"\"");
+                               + compressedFile.getName() +"\"");
             response.flushBuffer();
 
         } catch (FileNotFoundException e) {

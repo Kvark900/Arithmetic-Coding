@@ -17,9 +17,8 @@ public class SimpleProbabilities {
     public List<Character> getBasicLatinCharacters(){
         List<Character> basicLatinChars = new ArrayList<Character>();
 
-        for(int index=32; index<127; index++) {
-            basicLatinChars.add((char) index);
-        }
+        for(int index=32; index<127; index++) basicLatinChars.add((char) index);
+
         return basicLatinChars;
     }
 
@@ -42,7 +41,8 @@ public class SimpleProbabilities {
                 intervalEndPoint = intervalEndPoint.add(characterSimpleProbability);
                 interval.add(intervalEndPoint);
                 intervals.add(interval);
-            } else {
+            }
+            else {
                 List<BigDecimal> interval = new ArrayList<BigDecimal>();
                 interval.add(intervalEndPoint);
                 intervalEndPoint = intervalEndPoint.add(characterSimpleProbability);
