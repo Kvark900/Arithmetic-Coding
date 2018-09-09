@@ -1,7 +1,6 @@
 package com.kvark900.entropy.service;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,31 +11,17 @@ import java.io.*;
  */
 @Service
 public class FileDownloader {
-    private IOStreamsCloser ioStreamsCloser;
-
-    public FileDownloader() {
-    }
-
-    @Autowired
-    public FileDownloader(IOStreamsCloser ioStreamsCloser) {
-        this.ioStreamsCloser = ioStreamsCloser;
-    }
 
     public void downloadFile(File compressedFile, HttpServletResponse response ){
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(new FileInputStream(compressedFile));
-            IOUtils.copy(is, response.getOutputStream());
+        try (InputStream inputStream = new BufferedInputStream(new FileInputStream(compressedFile)))
+        {
+            IOUtils.copy(inputStream, response.getOutputStream());
             response.setHeader("Content-Disposition", "attachment; filename=\""
                                + compressedFile.getName() +"\"");
             response.flushBuffer();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            ioStreamsCloser.closeStream(is);
         }
     }
 }

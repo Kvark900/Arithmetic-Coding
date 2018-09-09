@@ -1,8 +1,10 @@
 package com.kvark900.entropy.service.arithmeticCoding;
 
+import com.kvark900.entropy.service.Interval;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,71 +15,52 @@ import java.util.Map;
  */
 @Service
 public class SimpleProbabilities {
-    //Getting Basic Latin characters
-    public List<Character> getBasicLatinCharacters(){
-        List<Character> basicLatinChars = new ArrayList<Character>();
-
+    List<Character> getBasicLatinCharacters(){
+        List<Character> basicLatinChars = new ArrayList<>();
         for(int index=32; index<127; index++) basicLatinChars.add((char) index);
-
         return basicLatinChars;
     }
 
-    //Simple characters map
-    public Map<Character, List<BigDecimal>> getCharsSimpleIntervalsMap(){
-        List<List<BigDecimal>> intervals = new ArrayList<List<BigDecimal>>();
-        BigDecimal characterSimpleProbability = BigDecimal.ONE.
-                divide(new BigDecimal(getBasicLatinCharacters().size()), 1000,
-                        BigDecimal.ROUND_HALF_UP);
-
-        Map<Character, List<BigDecimal>> charIntervalsMap = new HashMap<Character, List<BigDecimal>>();
+    Map<Character, Interval> getCharsIntervalsMap(){
+        List<Interval> intervals = new ArrayList<>();
+        Map<Character, Interval> charIntervalsMap = new HashMap<>();
         BigDecimal intervalEndPoint = new BigDecimal(0);
 
+        BigDecimal characterSimpleProbability = BigDecimal.ONE.divide(new BigDecimal(getBasicLatinCharacters().size()),
+                1000, RoundingMode.HALF_UP);
 
         //Adding intervals
         for (int i = 0; i < getBasicLatinCharacters().size(); i++) {
-            if (i == 0) {
-                List<BigDecimal> interval = new ArrayList<BigDecimal>();
-                interval.add(intervalEndPoint);
-                intervalEndPoint = intervalEndPoint.add(characterSimpleProbability);
-                interval.add(intervalEndPoint);
-                intervals.add(interval);
-            }
-            else {
-                List<BigDecimal> interval = new ArrayList<BigDecimal>();
-                interval.add(intervalEndPoint);
-                intervalEndPoint = intervalEndPoint.add(characterSimpleProbability);
-                interval.add(intervalEndPoint);
-                intervals.add(interval);
-            }
-        }
-
-        //Populating with characters and intervals charIntervalsMap
-        for (int i = 0; i < getBasicLatinCharacters().size(); i++) {
+            Interval interval = new Interval();
+            interval.setLowerBound(intervalEndPoint);
+            intervalEndPoint = intervalEndPoint.add(characterSimpleProbability);
+            interval.setUpperBound(intervalEndPoint);
+            intervals.add(interval);
             charIntervalsMap.put(getBasicLatinCharacters().get(i), intervals.get(i));
         }
 
         return charIntervalsMap;
     }
 
-    public BigDecimal[] getStopCharacterInterval () {
-        BigDecimal[] stopCharacterInterval = new BigDecimal[2];
+    Interval getStopCharacterInterval() {
+        Interval stopCharacterInterval = new Interval();
 
-        for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
+        for (Map.Entry<Character, Interval> entry : getCharsIntervalsMap().entrySet()) {
             if (entry.getKey().equals('~')) {
-                stopCharacterInterval[0] = entry.getValue().get(0);
-                stopCharacterInterval[1] = entry.getValue().get(1);
+                stopCharacterInterval.setLowerBound(entry.getValue().getLowerBound());
+                stopCharacterInterval.setUpperBound(entry.getValue().getUpperBound());
             }
         }
         return stopCharacterInterval;
     }
 
-    public BigDecimal[] getNewLineCharacterInterval () {
-        BigDecimal[] newLineCharacterInterval = new BigDecimal[2];
+    Interval getNewLineCharacterInterval() {
+        Interval newLineCharacterInterval = new Interval();
 
-        for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
+        for (Map.Entry<Character, Interval> entry : getCharsIntervalsMap().entrySet()) {
             if (entry.getKey().equals('|')) {
-                newLineCharacterInterval[0] = entry.getValue().get(0);
-                newLineCharacterInterval[1] = entry.getValue().get(1);
+                newLineCharacterInterval.setLowerBound(entry.getValue().getLowerBound());
+                newLineCharacterInterval.setUpperBound(entry.getValue().getUpperBound());
             }
         }
         return newLineCharacterInterval;

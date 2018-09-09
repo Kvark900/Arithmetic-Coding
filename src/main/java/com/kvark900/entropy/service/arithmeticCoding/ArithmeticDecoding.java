@@ -1,13 +1,11 @@
 package com.kvark900.entropy.service.arithmeticCoding;
 
-import com.kvark900.entropy.service.IOStreamsCloser;
+import com.kvark900.entropy.service.Interval;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,66 +14,51 @@ import java.util.Map;
 @Service
 public class ArithmeticDecoding extends SimpleProbabilities {
 
-    private IOStreamsCloser ioStreamsCloser;
-
     public ArithmeticDecoding() {
     }
 
-    @Autowired
-    public ArithmeticDecoding(IOStreamsCloser ioStreamsCloser) {
-        this.ioStreamsCloser = ioStreamsCloser;
-    }
-
-    //Read from compressed file - get message to decode
-    public BigDecimal getEncodedMessage(File file){
-
-        FileInputStream fileInputStream = null;
-        ObjectInputStream objectInputStream = null;
-        BigDecimal messageToDecode = null;
-
-        try {
-            fileInputStream = new FileInputStream(file);
-            objectInputStream = new ObjectInputStream(fileInputStream);
-            messageToDecode = (BigDecimal) objectInputStream.readObject();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            ioStreamsCloser.closeStream(fileInputStream);
-            ioStreamsCloser.closeStream(objectInputStream);
-        }
-        return messageToDecode;
-    }
-
-    public void decodeFile (File fileToDecode) throws FileNotFoundException, UnsupportedEncodingException {
+    public void decodeFile (File fileToDecode) throws IOException {
         BigDecimal messageToDecode = getEncodedMessage(fileToDecode);
         String fileName = FilenameUtils.getBaseName(fileToDecode.getName());
-        BigDecimal stopCharacterInterval[] = getStopCharacterInterval();
-        BigDecimal newLineCharacter[] = getNewLineCharacterInterval();
-        PrintWriter writer = new PrintWriter(fileName + ".txt", "UTF-8");
+        Interval stopCharacterInterval = getStopCharacterInterval();
+        Interval newLineCharacter = getNewLineCharacterInterval();
+        PrintWriter writer = new PrintWriter(fileName + ".txt");
 
-        while (messageToDecode.compareTo(stopCharacterInterval[0])<0){
-            for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
-                if (messageToDecode.compareTo(stopCharacterInterval[0])>0 && messageToDecode.compareTo(stopCharacterInterval[1])<0)
+        while (messageToDecode.compareTo(stopCharacterInterval.getLowerBound()) < 0) {
+            for (Map.Entry<Character, Interval> entry : getCharsIntervalsMap().entrySet()) {
+                if (stopCharacterInterval.containsWithinBoundaries(messageToDecode))
                     break;
 
-                else if (messageToDecode.compareTo(newLineCharacter[0])>0 && messageToDecode.compareTo(newLineCharacter[1])<0) {
+                else if (newLineCharacter.containsWithinBoundaries(messageToDecode)) {
                     writer.println("");
-                    BigDecimal subtractMessage = messageToDecode.subtract(newLineCharacter[0]);
-                    BigDecimal subtractIntervals = newLineCharacter[1].subtract(newLineCharacter[0]);
+                    BigDecimal subtractMessage = messageToDecode.subtract(newLineCharacter.getLowerBound());
+                    BigDecimal subtractIntervals = newLineCharacter.getUpperBound().subtract(newLineCharacter.getLowerBound());
                     messageToDecode = subtractMessage.divide(subtractIntervals, 1000, BigDecimal.ROUND_HALF_UP);
                 }
-                else if(messageToDecode.compareTo(entry.getValue().get(0))>=0 && messageToDecode.compareTo(entry.getValue().get(1))<=0){
+                else if (messageToDecode.compareTo(entry.getValue().getLowerBound()) >= 0 &&
+                        messageToDecode.compareTo(entry.getValue().getUpperBound()) <= 0) {
                     writer.print(entry.getKey());
-                    BigDecimal subtractMessage = messageToDecode.subtract(entry.getValue().get(0));
-                    BigDecimal subtractIntervals = entry.getValue().get(1).subtract(entry.getValue().get(0));
+                    BigDecimal subtractMessage = messageToDecode.subtract(entry.getValue().getLowerBound());
+                    BigDecimal subtractIntervals = entry.getValue().getUpperBound().subtract(entry.getValue().getLowerBound());
                     messageToDecode = subtractMessage.divide(subtractIntervals, 1000, BigDecimal.ROUND_HALF_UP);
                 }
             }
         }
         writer.flush();
         writer.close();
+    }
+
+    private BigDecimal getEncodedMessage(File file){
+        BigDecimal messageToDecode = null;
+
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream))
+        {
+            messageToDecode = (BigDecimal) objectInputStream.readObject();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return messageToDecode;
     }
 }

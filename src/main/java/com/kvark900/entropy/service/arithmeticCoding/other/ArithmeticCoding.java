@@ -1,3 +1,4 @@
+/*
 package com.kvark900.entropy.service.arithmeticCoding.other;
 
 import com.kvark900.entropy.service.IOStreamsCloser;
@@ -10,9 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+*/
 /**
  * Created by Keno&Kemo on 31.12.2017..
- */
+ *//*
+
 @Service
 public class ArithmeticCoding extends FileData{
 
@@ -141,3 +144,4 @@ public class ArithmeticCoding extends FileData{
         }
     }
 }
+*/

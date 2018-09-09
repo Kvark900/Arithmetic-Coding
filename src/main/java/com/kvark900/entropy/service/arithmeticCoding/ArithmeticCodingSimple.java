@@ -1,14 +1,14 @@
 package com.kvark900.entropy.service.arithmeticCoding;
 
-import com.kvark900.entropy.service.IOStreamsCloser;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kvark900.entropy.service.Interval;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.List;
+import java.math.RoundingMode;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  * Created by Keno&Kemo on 11.01.2018..
@@ -16,85 +16,50 @@ import java.util.Scanner;
 @Service
 public class ArithmeticCodingSimple extends SimpleProbabilities {
 
-    private IOStreamsCloser ioStreamsCloser;
-
-    public ArithmeticCodingSimple() {
-
-    }
-
-    @Autowired
-    public ArithmeticCodingSimple(IOStreamsCloser ioStreamsCloser) {
-        this.ioStreamsCloser = ioStreamsCloser;
-    }
-
-
-
-    //Algorithm for encoding the file
     public BigDecimal encodeWithSimpleProbabilities(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
         BigDecimal subIntervalStart = new BigDecimal(0);
         BigDecimal width = new BigDecimal(0);
-        int countLines = 0;
+        int lineCounter = 0;
+        Set<Map.Entry<Character, Interval>> charsIntervals = getCharsIntervalsMap().entrySet();
         BigDecimal simpleProbability = BigDecimal.ONE.divide(new BigDecimal(getBasicLatinCharacters().size()),
-                                        1000, BigDecimal.ROUND_HALF_UP);
+                                        1000, RoundingMode.HALF_UP);
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            countLines++;
-            for (int i = 0; i < line.length(); i++) {
-                Character character = line.charAt(i);
-                //For the first character in the file do:
-                if(countLines==1 && i==0){
-                    //Start of the sub-interval
-                    for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
-                        if(entry.getKey().equals(character)){
-                            subIntervalStart = subIntervalStart.add(entry.getValue().get(0));
-//                            System.out.println("subIntervalStart: "+subIntervalStart);
+            lineCounter++;
+            for (int charPosition = 0; charPosition < line.length(); charPosition++) {
+                char character = line.charAt(charPosition);
+                if (lineCounter == 1 && charPosition == 0) {
+                    for (Map.Entry<Character, Interval> entry : charsIntervals) {
+                        if (entry.getKey().equals(character)) {
+                            subIntervalStart = subIntervalStart.add(entry.getValue().getLowerBound());
                         }
                     }
-
-                    //Width of the sub-interval
                     width = width.add(simpleProbability);
-//                   System.out.println("width: "+width);
                 }
-                //Else:
                 else {
-                    //Start of the sub-interval
-                    for (Map.Entry<Character, List<BigDecimal>> entry : getCharsSimpleIntervalsMap().entrySet()) {
-                        if(entry.getKey().equals(character)){
-                            subIntervalStart = subIntervalStart.add (entry.getValue().get(0).multiply(width));
-//                            System.out.println("subIntervalStart: "+subIntervalStart);
+                    for (Map.Entry<Character, Interval> entry : charsIntervals) {
+                        if (entry.getKey().equals(character)) {
+                            subIntervalStart = subIntervalStart.add(entry.getValue().getLowerBound().multiply(width));
                         }
                     }
-
-                    //Width of the sub-interval
                     width = width.multiply(simpleProbability);
-//                  System.out.println("width: "+width);
                 }
-
             }
         }
         scanner.close();
-        return subIntervalStart = subIntervalStart.setScale(1000, BigDecimal.ROUND_HALF_UP);
+        return subIntervalStart = subIntervalStart.setScale(1000, RoundingMode.HALF_UP);
     }
 
-    @SuppressWarnings("Duplicates")
-    //Write encoded message to the new compressed file
     public void createCompressedFile(File file, BigDecimal bigDecimal){
-        FileOutputStream fileOutputStream = null;
-        ObjectOutputStream objectOutputStream = null;
-
-        try {
-            fileOutputStream = new FileOutputStream(file);
-            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream))
+        {
             objectOutputStream.writeObject(bigDecimal);
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
-            ioStreamsCloser.closeStream(fileOutputStream);
-            ioStreamsCloser.closeStream(objectOutputStream);
         }
     }
 }
