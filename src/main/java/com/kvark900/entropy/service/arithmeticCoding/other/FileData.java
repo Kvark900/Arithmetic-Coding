@@ -1,11 +1,17 @@
+/*
 package com.kvark900.entropy.service.arithmeticCoding.other;
 
-/**
+
+
+*
  * Created by Keno&Kemo on 31.12.2017..
- */
+
+
 //Class for analysing file data, getting all characters, characters probabilities of
 // occurrences, characters intervals
-/*@Service
+
+
+@Service
 public class FileData {
     public int countNumberOfAllCharacters(File file) throws FileNotFoundException {
         Scanner scanner;
@@ -167,4 +173,6 @@ public class FileData {
         return charIntervalsMap;
     }
 
-}*/
+}
+
+*/

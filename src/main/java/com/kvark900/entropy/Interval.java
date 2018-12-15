@@ -1,4 +1,4 @@
-package com.kvark900.entropy.service;
+package com.kvark900.entropy;
 
 import java.math.BigDecimal;
 

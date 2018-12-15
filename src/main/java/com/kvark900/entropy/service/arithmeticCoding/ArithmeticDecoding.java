@@ -1,6 +1,6 @@
 package com.kvark900.entropy.service.arithmeticCoding;
 
-import com.kvark900.entropy.service.Interval;
+import com.kvark900.entropy.Interval;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 /**
- * Created by Keno&Kemo on 02.01.2018..*/
+ * Created by Keno&Kemo on 02.01.2018..
+ */
 
 @Service
 public class ArithmeticDecoding extends SimpleProbabilities {
@@ -17,7 +18,7 @@ public class ArithmeticDecoding extends SimpleProbabilities {
     public ArithmeticDecoding() {
     }
 
-    public void decodeFile (File fileToDecode) throws IOException {
+    public void decodeFile(File fileToDecode) throws IOException {
         BigDecimal messageToDecode = getEncodedMessage(fileToDecode);
         String fileName = FilenameUtils.getBaseName(fileToDecode.getName());
         Interval stopCharacterInterval = getStopCharacterInterval();
@@ -48,7 +49,7 @@ public class ArithmeticDecoding extends SimpleProbabilities {
         writer.close();
     }
 
-    private BigDecimal getEncodedMessage(File file){
+    private BigDecimal getEncodedMessage(File file) {
         BigDecimal messageToDecode = null;
 
         try (FileInputStream fileInputStream = new FileInputStream(file);

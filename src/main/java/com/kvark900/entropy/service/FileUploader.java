@@ -1,5 +1,6 @@
 package com.kvark900.entropy.service;
 
+import com.kvark900.entropy.SpecialCharacters;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -21,10 +22,10 @@ public class FileUploader {
 
             while ((line = bufferedReader.readLine()) != null) {
                 //writing lines and newLineCharacters to a new File
-                printWriter.println(line + '|');
+                printWriter.println(line + SpecialCharacters.NEW_LINE_CHARACTER);
             }
             //adding stop character
-            printWriter.print('~');
+            printWriter.print(SpecialCharacters.STOP_CHARACTER);
 
         } catch (IOException e) {
             e.printStackTrace();

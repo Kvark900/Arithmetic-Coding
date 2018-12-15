@@ -40,84 +40,79 @@ public class MainController {
     }
 
     @RequestMapping("/")
-    public String home(){
+    public String home() {
         return "home";
     }
 
     @RequestMapping(value = "/compressFile", method = RequestMethod.POST)
     public String compressFile(@RequestParam("fileToCompress") MultipartFile file, Model model,
-                             MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
+                               MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if(file.isEmpty()){
+        if (file.isEmpty()) {
             model.addAttribute("noFileSelectedToCompress", true);
             return "home";
         }
 
-        if(!file.getContentType().equals("text/plain")){
+        if (!file.getContentType().equals("text/plain")) {
             model.addAttribute("notTextFile", true);
             return "home";
         }
 
-        else {
-            File currDir = new File(".");
-            String path = currDir.getAbsolutePath();
-            String fileLocation = path.substring(0, path.length() - 1) + file.getOriginalFilename();
-            String compressedFilePath = FilenameUtils.getBaseName(fileLocation) + ".arit";
+        File currDir = new File(".");
+        String path = currDir.getAbsolutePath();
+        String fileLocation = path.substring(0, path.length() - 1) + file.getOriginalFilename();
+        String compressedFilePath = FilenameUtils.getBaseName(fileLocation) + ".arit";
 
-            //uploading file
-            File uploadedFile = new File(fileLocation);
-            fileUploader.uploadTextFileToCompress(file.getInputStream(), uploadedFile);
+        //uploading file
+        File uploadedFile = new File(fileLocation);
+        fileUploader.uploadTextFileToCompress(file.getInputStream(), uploadedFile);
 
-            //compressing file
-            File compressedFile = new File(compressedFilePath);
-            BigDecimal encodedMessage = arithmeticCodingSimple.
-                    encodeWithSimpleProbabilities(uploadedFile);
-            arithmeticCodingSimple.createCompressedFile(compressedFile, encodedMessage);
+        //compressing file
+        File compressedFile = new File(compressedFilePath);
+        BigDecimal encodedMessage = arithmeticCodingSimple.
+                encodeWithSimpleProbabilities(uploadedFile);
+        arithmeticCodingSimple.createCompressedFile(compressedFile, encodedMessage);
 
-            //downloading compressed file
-            fileDownloader.downloadFile(compressedFile, response);
+        //downloading compressed file
+        fileDownloader.downloadFile(compressedFile, response);
 
-            //deleting files
-            uploadedFile.delete();
-            compressedFile.delete();
+        //deleting files
+        uploadedFile.delete();
+        compressedFile.delete();
 
-            return null;
-        }
-
+        return null;
     }
 
     @RequestMapping(value = "/decompressFile", method = RequestMethod.POST)
     public String decompressFile(@RequestParam("fileToDecompress") MultipartFile file, Model model,
-                               MultipartHttpServletRequest request, HttpServletResponse response  ) throws IOException {
+                                 MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if(file.isEmpty()){
+        if (file.isEmpty()) {
             model.addAttribute("noFileSelectedToDeCompress", true);
             return "home";
         }
 
-        else{
-            File currDir = new File(".");
-            String path = currDir.getAbsolutePath();
-            String fileLocation = path.substring(0, path.length() - 1) + file.getOriginalFilename();
-            String decompressedFilePath = FilenameUtils.getBaseName(fileLocation)+".txt";
+        File currDir = new File(".");
+        String path = currDir.getAbsolutePath();
+        String fileLocation = path.substring(0, path.length() - 1) + file.getOriginalFilename();
+        String decompressedFilePath = FilenameUtils.getBaseName(fileLocation) + ".txt";
 
-            //uploading file
-            File uploadedFile = new File(fileLocation);
-            fileUploader.uploadFileToDecompress(file.getInputStream(), uploadedFile);
+        //uploading file
+        File uploadedFile = new File(fileLocation);
+        fileUploader.uploadFileToDecompress(file.getInputStream(), uploadedFile);
 
-            //decompressing file
-            File decompressedFile = new File(decompressedFilePath);
-            arithmeticDecoding.decodeFile(new File(fileLocation));
+        //decompressing file
+        File decompressedFile = new File(decompressedFilePath);
+        arithmeticDecoding.decodeFile(new File(fileLocation));
 
 
-            //downloading decompressed file
-            fileDownloader.downloadFile(decompressedFile, response);
+        //downloading decompressed file
+        fileDownloader.downloadFile(decompressedFile, response);
 
-            //deleting files
-            uploadedFile.delete();
-            decompressedFile.delete();
+        //deleting files
+        uploadedFile.delete();
+        decompressedFile.delete();
 
-            return null;
-        }
+        return null;
     }
 }

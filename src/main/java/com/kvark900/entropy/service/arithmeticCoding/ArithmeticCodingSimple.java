@@ -1,6 +1,6 @@
 package com.kvark900.entropy.service.arithmeticCoding;
 
-import com.kvark900.entropy.service.Interval;
+import com.kvark900.entropy.Interval;
 import org.springframework.stereotype.Service;
 
 import java.io.*;

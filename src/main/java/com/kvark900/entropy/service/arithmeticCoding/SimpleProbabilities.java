@@ -1,6 +1,7 @@
 package com.kvark900.entropy.service.arithmeticCoding;
 
-import com.kvark900.entropy.service.Interval;
+import com.kvark900.entropy.Interval;
+import com.kvark900.entropy.SpecialCharacters;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -46,7 +47,7 @@ public class SimpleProbabilities {
         Interval stopCharacterInterval = new Interval();
 
         for (Map.Entry<Character, Interval> entry : getCharsIntervalsMap().entrySet()) {
-            if (entry.getKey().equals('~')) {
+            if (entry.getKey().equals(SpecialCharacters.STOP_CHARACTER)) {
                 stopCharacterInterval.setLowerBound(entry.getValue().getLowerBound());
                 stopCharacterInterval.setUpperBound(entry.getValue().getUpperBound());
             }
@@ -58,7 +59,7 @@ public class SimpleProbabilities {
         Interval newLineCharacterInterval = new Interval();
 
         for (Map.Entry<Character, Interval> entry : getCharsIntervalsMap().entrySet()) {
-            if (entry.getKey().equals('|')) {
+            if (entry.getKey().equals(SpecialCharacters.NEW_LINE_CHARACTER)) {
                 newLineCharacterInterval.setLowerBound(entry.getValue().getLowerBound());
                 newLineCharacterInterval.setUpperBound(entry.getValue().getUpperBound());
             }
