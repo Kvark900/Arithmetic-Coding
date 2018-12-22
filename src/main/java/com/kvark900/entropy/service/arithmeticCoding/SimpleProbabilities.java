@@ -16,13 +16,17 @@ import java.util.Map;
  */
 @Service
 public class SimpleProbabilities {
-    List<Character> getBasicLatinCharacters(){
+
+    List<Character> getBasicLatinCharacters() {
         List<Character> basicLatinChars = new ArrayList<>();
-        for(int index=32; index<127; index++) basicLatinChars.add((char) index);
+        for (int index = 32; index < 127; index++)
+            basicLatinChars.add((char) index);
+        basicLatinChars.add(SpecialCharacters.NEW_LINE_CHARACTER);
+        basicLatinChars.add(SpecialCharacters.STOP_CHARACTER);
         return basicLatinChars;
     }
 
-    Map<Character, Interval> getCharsIntervalsMap(){
+    Map<Character, Interval> getCharsIntervalsMap() {
         List<Interval> intervals = new ArrayList<>();
         Map<Character, Interval> charIntervalsMap = new HashMap<>();
         BigDecimal intervalEndPoint = new BigDecimal(0);
@@ -46,24 +50,22 @@ public class SimpleProbabilities {
     Interval getStopCharacterInterval() {
         Interval stopCharacterInterval = new Interval();
 
-        for (Map.Entry<Character, Interval> entry : getCharsIntervalsMap().entrySet()) {
-            if (entry.getKey().equals(SpecialCharacters.STOP_CHARACTER)) {
-                stopCharacterInterval.setLowerBound(entry.getValue().getLowerBound());
-                stopCharacterInterval.setUpperBound(entry.getValue().getUpperBound());
-            }
+        if (getCharsIntervalsMap().containsKey(SpecialCharacters.STOP_CHARACTER)) {
+            stopCharacterInterval.setLowerBound(getCharsIntervalsMap().get(SpecialCharacters.STOP_CHARACTER).getLowerBound());
+            stopCharacterInterval.setUpperBound(getCharsIntervalsMap().get(SpecialCharacters.STOP_CHARACTER).getUpperBound());
         }
+
         return stopCharacterInterval;
     }
 
     Interval getNewLineCharacterInterval() {
         Interval newLineCharacterInterval = new Interval();
 
-        for (Map.Entry<Character, Interval> entry : getCharsIntervalsMap().entrySet()) {
-            if (entry.getKey().equals(SpecialCharacters.NEW_LINE_CHARACTER)) {
-                newLineCharacterInterval.setLowerBound(entry.getValue().getLowerBound());
-                newLineCharacterInterval.setUpperBound(entry.getValue().getUpperBound());
-            }
+        if (getCharsIntervalsMap().containsKey(SpecialCharacters.NEW_LINE_CHARACTER)) {
+            newLineCharacterInterval.setLowerBound(getCharsIntervalsMap().get(SpecialCharacters.NEW_LINE_CHARACTER).getLowerBound());
+            newLineCharacterInterval.setUpperBound(getCharsIntervalsMap().get(SpecialCharacters.NEW_LINE_CHARACTER).getUpperBound());
         }
+
         return newLineCharacterInterval;
     }
 }
